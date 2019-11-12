@@ -59,5 +59,5 @@ func main() {
 	if err != nil {
 		log.Fatalf("error: %v", err)
 	}
-	fmt.Print(bussola.Print(&b, params))
+	fmt.Print(b.Print(params))
 }

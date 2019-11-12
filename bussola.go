@@ -25,10 +25,10 @@ type Unit struct {
 
 type Metadata map[string]string
 
-func Print(bussola *Bussola, params *Params) string {
+func (b *Bussola) Print(params *Params) string {
 	var buffer bytes.Buffer
 	buffer.WriteString("digraph G {\n")
-	units := resolveUnits(bussola, params)
+	units := resolveUnits(b, params)
 	writeGraph(&buffer, units, params.Directives, "")
 	connections := resolveConnections(units)
 	buffer.WriteString(strings.Join(connections, ""))
