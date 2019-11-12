@@ -36,15 +36,50 @@ func (b *Bussola) Print(params *Params) string {
 	return buffer.String()
 }
 
-func resolveUnits(bussola *Bussola, params *Params) []*Unit {
+func (b *Bussola) AvailableParams() Params {
+	return Params{
+		Filters:    b.availableFilters(),
+		Directives: b.availableDirectives(),
+	}
+}
+
+func (b *Bussola) availableFilters() map[string][]string {
+	m := make(map[string][]string)
+	for _, d := range b.availableDirectives() {
+		dm := make(map[string]bool)
+		for _, u := range b.Units {
+			dm[u.Metadata[d]] = true
+		}
+		for dmv, _ := range dm {
+			m[d] = append(m[d], dmv)
+		}
+	}
+	return m
+}
+
+func (b *Bussola) availableDirectives() []string {
+	m := make(map[string]bool)
+	for _, u := range b.Units {
+		for d, _ := range u.Metadata {
+			m[d] = true
+		}
+	}
+	var directives []string
+	for d, _ := range m {
+		directives = append(directives, d)
+	}
+	return directives
+}
+
+func resolveUnits(b *Bussola, params *Params) []*Unit {
 	var units []*Unit
 	if len(params.Filters) == 0 {
-		units = bussola.Units
+		units = b.Units
 	} else {
 		m := make(map[*Unit]bool)
 		for fk, fv := range params.Filters {
 			for _, v := range fv {
-				for _, u := range bussola.Units {
+				for _, u := range b.Units {
 					if u.Metadata[fk] == v {
 						m[u] = true
 					}
