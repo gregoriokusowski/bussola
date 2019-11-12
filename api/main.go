@@ -64,7 +64,7 @@ func main() {
 		w.Write(j)
 	}
 
-	http.Handle("/", http.FileServer(http.Dir("/static")))
+	http.Handle("/", http.FileServer(http.Dir("static")))
 	http.HandleFunc("/render", renderDot)
 	http.HandleFunc("/params", provideParams)
 	http.ListenAndServe(":9999", nil)

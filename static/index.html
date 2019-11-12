@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>bussola</title>
+  </head>
+  <body>
+    <textarea id="params" rows="4" cols="50">
+      {}
+    </textarea>
+    <a href="javascript:void(0)"
+      onclick="window.renderDot()">render</a>
+    <div id="graph">
+    </div>
+  </body>
+  <script src="http://localhost:9999/viz.js"></script>
+  <script src="http://localhost:9999/full.render.js"></script>
+  <script>
+    const baseApiUrl = 'http://localhost:9999';
+    var viz = new Viz();
+
+    fetch(baseApiUrl+'/params').then((response) => {
+      response.json().then(params => document.getElementById('params').value = JSON.stringify(params))
+    });
+
+
+    window.renderDot = function () {
+      fetch(baseApiUrl+'/render', {
+        method: 'POST',
+        body: document.getElementById('params').value
+      }).then(response => 
+        response.text().then(text => 
+          viz.renderSVGElement(text)
+          .then(function(element) {
+            document.getElementById("graph").innerHTML = '';
+            document.getElementById("graph").appendChild(element);
+          })
+          .catch(error => {
+            viz = new Viz();
+            console.error(error);
+          })
+        )
+      )
+    }
+
+  </script>
+</html>
