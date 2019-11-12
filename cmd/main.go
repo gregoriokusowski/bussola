@@ -13,9 +13,27 @@ import (
 )
 
 func main() {
-	directives := flag.String("directives", "", "How the graph should nest info")
+	raw_directives := flag.String("directives", "", "How the graph should nest info")
+	raw_filters := flag.String("filters", "", "What information should be shown")
 
 	flag.Parse()
+
+	directives := strings.Split(*raw_directives, ",")
+	filters := make(map[string][]string)
+	if *raw_filters != "" {
+		f := strings.Split(*raw_filters, ";")
+		for _, fo := range f {
+			s := strings.Split(fo, ":")
+			o, v := s[0], s[1]
+			filters[o] = strings.Split(v, ",")
+		}
+	}
+
+	params := &bussola.Params{
+		Directives: directives,
+		Filters:    filters,
+	}
+
 	var data []byte
 	var err error
 	switch flag.NArg() {
@@ -41,5 +59,5 @@ func main() {
 	if err != nil {
 		log.Fatalf("error: %v", err)
 	}
-	fmt.Print(bussola.Print(b.Units, strings.Split(*directives, ",")))
+	fmt.Print(bussola.Print(&b, params))
 }

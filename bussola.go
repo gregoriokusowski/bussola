@@ -6,6 +6,11 @@ import (
 	"strings"
 )
 
+type Params struct {
+	Directives []string
+	Filters    map[string][]string
+}
+
 type Bussola struct {
 	Units []*Unit `yaml:"units"`
 }
@@ -20,21 +25,50 @@ type Unit struct {
 
 type Metadata map[string]string
 
-func Print(units []*Unit, directives []string) string {
+func Print(bussola *Bussola, params *Params) string {
 	var buffer bytes.Buffer
 	buffer.WriteString("digraph G {\n")
-	writeGraph(&buffer, units, directives, "")
+	units := resolveUnits(bussola, params)
+	writeGraph(&buffer, units, params.Directives, "")
 	connections := resolveConnections(units)
 	buffer.WriteString(strings.Join(connections, ""))
 	buffer.WriteString("}")
 	return buffer.String()
 }
 
+func resolveUnits(bussola *Bussola, params *Params) []*Unit {
+	var units []*Unit
+	if len(params.Filters) == 0 {
+		units = bussola.Units
+	} else {
+		m := make(map[*Unit]bool)
+		for fk, fv := range params.Filters {
+			for _, v := range fv {
+				for _, u := range bussola.Units {
+					if u.Metadata[fk] == v {
+						m[u] = true
+					}
+				}
+			}
+		}
+		for u, _ := range m {
+			units = append(units, u)
+		}
+	}
+	return units
+}
+
 func resolveConnections(units []*Unit) []string {
+	m := make(map[string]bool)
+	for _, u := range units {
+		m[u.Name] = true
+	}
 	var connections []string
 	for _, unit := range units {
 		for _, dep := range unit.DependsOn {
-			connections = append(connections, fmt.Sprintf("%s -> %s;", dep, unit.Name))
+			if m[dep] {
+				connections = append(connections, fmt.Sprintf("%s -> %s;", dep, unit.Name))
+			}
 		}
 	}
 	return connections
