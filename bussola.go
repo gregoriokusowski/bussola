@@ -29,7 +29,7 @@ func (b *Bussola) Print(params *Params) string {
 	var buffer bytes.Buffer
 	buffer.WriteString("digraph G {\n")
 	units := resolveUnits(b, params)
-	writeGraph(&buffer, units, params.Directives, "")
+	writeGraph(&buffer, units, params.Directives)
 	connections := resolveConnections(units)
 	buffer.WriteString(strings.Join(connections, ""))
 	buffer.WriteString("}")
@@ -109,7 +109,7 @@ func resolveConnections(units []*Unit) []string {
 	return connections
 }
 
-func writeGraph(buffer *bytes.Buffer, units []*Unit, directives []string, clusterPrefix string) {
+func writeGraph(buffer *bytes.Buffer, units []*Unit, directives []string) {
 	if len(directives) == 0 {
 		for _, unit := range units {
 			buffer.WriteString(fmt.Sprintf("%s [label=\"%s\"]; \n", unit.Name, unit.Name))
@@ -117,10 +117,14 @@ func writeGraph(buffer *bytes.Buffer, units []*Unit, directives []string, cluste
 	} else {
 		currentDirective, remainingDirectives := directives[len(directives)-1], directives[:len(directives)-1]
 		for groupName, groupUnits := range groupBy(units, currentDirective) {
-			buffer.WriteString(fmt.Sprintf("subgraph cluster_%s_%s {\n", clusterPrefix, groupName))
-			buffer.WriteString(fmt.Sprintf("label = \"%s\";\n", groupName))
-			writeGraph(buffer, groupUnits, remainingDirectives, clusterPrefix+"_"+groupName)
-			buffer.WriteString("}\n")
+			if groupName == "" {
+				writeGraph(buffer, groupUnits, remainingDirectives)
+			} else {
+				buffer.WriteString(fmt.Sprintf("subgraph cluster_%s_%s {\n", currentDirective, groupName))
+				buffer.WriteString(fmt.Sprintf("label = \"%s\";\n", groupName))
+				writeGraph(buffer, groupUnits, remainingDirectives)
+				buffer.WriteString("}\n")
+			}
 		}
 	}
 }
