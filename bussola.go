@@ -9,6 +9,7 @@ import (
 type Params struct {
 	Directives []string
 	Filters    map[string][]string
+	//InclusiveFiltering bool
 }
 
 type Bussola struct {
@@ -121,6 +122,7 @@ func writeGraph(buffer *bytes.Buffer, units []*Unit, directives []string) {
 				writeGraph(buffer, groupUnits, remainingDirectives)
 			} else {
 				buffer.WriteString(fmt.Sprintf("subgraph cluster_%s_%s {\n", currentDirective, groupName))
+				buffer.WriteString(fmt.Sprintf("href = \"#%s___%s\";\n", currentDirective, groupName))
 				buffer.WriteString(fmt.Sprintf("label = \"%s\";\n", groupName))
 				writeGraph(buffer, groupUnits, remainingDirectives)
 				buffer.WriteString("}\n")
