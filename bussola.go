@@ -7,9 +7,9 @@ import (
 )
 
 type Params struct {
-	Directives []string
-	Filters    map[string][]string
-	//InclusiveFiltering bool
+	Directives         []string
+	Filters            map[string][]string
+	InclusiveFiltering bool
 }
 
 type Bussola struct {
@@ -78,12 +78,30 @@ func resolveUnits(b *Bussola, params *Params) []*Unit {
 		units = b.Units
 	} else {
 		m := make(map[*Unit]bool)
-		for fk, fv := range params.Filters {
-			for _, v := range fv {
-				for _, u := range b.Units {
-					if u.Metadata[fk] == v {
-						m[u] = true
+		for _, u := range b.Units {
+			if params.InclusiveFiltering {
+				for fk, fv := range params.Filters {
+					for _, v := range fv {
+						if u.Metadata[fk] == v {
+							m[u] = true
+						}
 					}
+				}
+			} else {
+				valid := true
+				for fk, fv := range params.Filters {
+					validForFilter := false
+					for _, v := range fv {
+						if u.Metadata[fk] == v {
+							validForFilter = true
+						}
+					}
+					if !validForFilter {
+						valid = false
+					}
+				}
+				if valid {
+					m[u] = valid
 				}
 			}
 		}
