@@ -1,6 +1,4 @@
-const baseApiUrl = 'http://localhost:9999';
-
-fetch(baseApiUrl+'/params').then((response) => {
+fetch('/params').then((response) => {
   response.json().then((params) => {
       //document.getElementById('params').value = JSON.stringify(params);
       window.appState.directives = params.Directives;
@@ -41,7 +39,7 @@ window.reset = function() {
 
 window.renderDot = function () {
   console.log(window.appState);
-  fetch(baseApiUrl+'/render', {
+  fetch('/render', {
     method: 'POST',
     body: JSON.stringify({"Directives":window.appState.directives,
                           "Filters":window.appState.filters})

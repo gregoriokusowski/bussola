@@ -6,17 +6,18 @@
     <div id="panel">
       <div id="directives">
       </div>
+      <a href="javascript:void(0)"
+        onclick="window.reset()">reset</a>
     </div>
-    <a href="javascript:void(0)"
-      onclick="window.reset()">reset</a>
     <div id="graph">
     </div>
   </body>
-  <script src="http://localhost:9999/lib/viz.js"></script>
-  <script src="http://localhost:9999/lib/full.render.js"></script>
-  <script src="http://localhost:9999/lib/draggable.bundle.min.js"></script>
-  <script src="http://localhost:9999/bussola.js"></script>
+  <script src="/lib/viz.js"></script>
+  <script src="/lib/full.render.js"></script>
+  <script src="/lib/draggable.bundle.min.js"></script>
+  <script src="/bussola.js"></script>
   <style>
+    #panel { float: left; }
     #directives {display: inline-grid;}
     #directives span {display: block;}
     #directives span:nth-child(odd) {background: #EEE}
