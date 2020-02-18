@@ -1,6 +1,7 @@
 import * as ace from 'brace';
 import 'brace/mode/yaml';
 import 'brace/theme/github';
+import 'brace/keybinding/vim';
 import YAML from 'yamljs';
 import Viz from 'viz.js';
 import { Module, render } from 'viz.js/full.render.js';
@@ -27,6 +28,20 @@ const editor = ace.edit('editor')
 editor.getSession().setMode('ace/mode/yaml');
 editor.setTheme('ace/theme/github');
 editor.setValue(dummyData);
+editor.commands.addCommand({
+  name: "Render Graph",
+  bindKey: { win: "Ctrl-Enter", mac: "Command-Enter" },
+  exec: (editor) => {
+    window.render();
+  }
+});
+editor.commands.addCommand({
+  name: "Turn on vim mode",
+  bindKey: { win: "Ctrl-Shift-Enter", mac: "Command-Shift-Enter" },
+  exec: (editor) => {
+    editor.setKeyboardHandler("ace/keyboard/vim");
+  }
+});
 
 class AllElements {
   constructor(params) {
@@ -111,8 +126,7 @@ const groupUnitsBy = (units, directive) => units.reduce(
   (result, unit) => ({...result, [unit.metadata[directive] || ""]: [...(result[unit.metadata[directive] || ""] || []), unit]}),
   {});
 
-document.getElementById("render").onclick = (e) => {
-  e.preventDefault();
+window.render = () => {
   const parsedYAML = YAML.parse(editor.getValue());
   window.allElements = new AllElements(parsedYAML);
   window.output = window.allElements.filteredGraph((parsedYAML.filter || {}), (parsedYAML.directives || []));
@@ -124,6 +138,11 @@ document.getElementById("render").onclick = (e) => {
       graphElement.innerHTML = '';
       graphElement.appendChild(element);
     });
+};
+
+document.getElementById("render").onclick = (e) => {
+  e.preventDefault();
+  window.render();
 };
 
 document.getElementById("toggle-editor").onclick = (event) => {
