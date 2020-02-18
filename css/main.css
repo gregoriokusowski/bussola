@@ -6989,3 +6989,9 @@ body section.section {
 
 body div.container {
   margin: 0; }
+
+#graph {
+  overflow: auto; }
+
+#graph {
+  overflow: auto; }

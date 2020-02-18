@@ -8,7 +8,30 @@
     <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
-    <section class="hero is-medium is-primary">
+    <nav class="navbar is-light" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item">
+          Bussola
+        </a>
+      </div>
+
+      <div class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item">
+            <button id="render" class="button is-primary">Render</button>
+          </a>
+          <a class="navbar-item">
+            <button id="toggle-editor" class="button is-secondary">Toggle Editor</button>
+          </a>
+
+
+          <!--<a class="navbar-item">-->
+            <!--Documentation-->
+          <!--</a>-->
+        </div>
+      </div>
+    </nav>
+    <!-- <section class="hero is-medium is-primary">
       <div class="hero-body">
         <div class="container">
           <div class="columns">
@@ -23,15 +46,14 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
     <section class="section">
       <div class="container">
         <div class="columns">
-          <div class="column">
+          <div id="editor-column" class="column is-half">
             <div id="editor"></div>
           </div>
-          <div class="column">
-            <button id="render" class="button is-primary">Primary</button>
+          <div id="graph-column" class="column is-half">
             <div id="graph"></div>
           </div>
           <!--<div class="column is-8-desktop is-offset-2-desktop">-->

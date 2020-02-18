@@ -118,3 +118,11 @@ document.getElementById("render").onclick = (e) => {
     });
 };
 
+document.getElementById("toggle-editor").onclick = (event) => {
+  const e = document.getElementById("editor-column");
+  const c = document.getElementById("graph-column");
+  e.classList.toggle('is-hidden');
+  e.classList.toggle('is-half');
+  c.classList.toggle('is-full');
+  c.classList.toggle('is-half');
+};
