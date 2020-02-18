@@ -62,7 +62,9 @@ class AllElements {
   }
   plotUnits(filteredUnits, directives) {
     if (directives.length) {
-      let currentDirective = directives.shift();
+      let currentDirective = directives[0];
+      let restOfDirectives = directives.slice(1);
+
       let groups = groupUnitsBy(filteredUnits, currentDirective);
       let output = "";
       Object.keys(groups).forEach((groupName) => {
@@ -71,10 +73,10 @@ class AllElements {
           output += `subgraph cluster_${currentDirective}_${groupName} {\n`;
           output += `href = \"${currentDirective}___${groupName}\";\n`;
           output += `label = \"${groupName}\";\n`;
-          output += this.plotUnits(unitsOfGroup, directives);
+          output += this.plotUnits(unitsOfGroup, restOfDirectives);
           output += "}\n";
         } else {
-          output += this.plotUnits(unitsOfGroup, directives);
+          output += this.plotUnits(unitsOfGroup, restOfDirectives);
         }
       });
       return output;
