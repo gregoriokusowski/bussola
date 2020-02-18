@@ -57,8 +57,14 @@ class AllElements {
     return dotOutput;
   }
   getFilteredUnits(filter) {
-    // TODO
-    return this.units;
+    return this.units.filter((unit) => {
+      let included = true;
+      Object.keys(filter).forEach((directive) => {
+        let options = filter[directive];
+        if (options.indexOf(unit.metadata[directive]) === -1) included = false;
+      });
+      return included;
+    });
   }
   plotUnits(filteredUnits, directives) {
     if (directives.length) {
