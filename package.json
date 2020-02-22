@@ -22,10 +22,12 @@
     "brace": "^0.11.1",
     "browserify": "^16.5.0",
     "bulma": "^0.7.2",
+    "jest": "^25.1.0",
     "node-sass": "^4.11.0",
     "npm-run-all": "^4.1.5",
     "postcss-cli": "^6.1.1",
     "viz.js": "^2.1.2",
+    "watchify": "^3.11.1",
     "yamljs": "^0.3.0"
   },
   "scripts": {
@@ -34,8 +36,10 @@
     "css-postcss": "postcss --use autoprefixer --output css/main.css css/main.css",
     "css-watch": "npm run css-build -- --watch",
     "deploy": "npm run css-deploy && npm run js-build",
-    "js-build": "browserify _javascript/main.js -o lib/main.js -t [ babelify --presets [ @babel/preset-env ] ]",
-    "js-watch": "npm run js-build -- --watch",
-    "start": "npm-run-all --parallel css-watch js-watch"
+    "js-build": "browserify _javascript/main.js -o lib/main.js -t [ babelify ]",
+    "js-watch": "watchify _javascript/main.js -o lib/main.js -t [ babelify ] -v",
+    "test-build": "jest",
+    "test-watch": "jest --watchAll",
+    "start": "npm-run-all --parallel css-watch js-watch test-watch"
   }
 }
