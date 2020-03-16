@@ -4,6 +4,7 @@ import 'brace/theme/github';
 import 'brace/keybinding/vim';
 import YAML from 'yamljs';
 import Viz from 'viz.js';
+import svgPanZoom from 'svg-pan-zoom';
 import { Module, render } from 'viz.js/full.render.js';
 import dummyData from './dummyData';
 import Bussola from './Bussola';
@@ -38,6 +39,7 @@ window.render = () => {
       window.graphElement = document.getElementById("graph");
       graphElement.innerHTML = '';
       graphElement.appendChild(element);
+      svgPanZoom(element);
     });
 };
 

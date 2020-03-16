@@ -20,6 +20,7 @@ export default class Bussola {
   }
   filteredGraph(filter, directives) {
     let dotOutput = "digraph G {\n";
+    dotOutput += 'node [fontsize=8,style=filled,color="#ccf5ef"];\n';
     const filteredUnits = this.getFilteredUnits(filter);
     dotOutput += this.plotUnits(filteredUnits, directives);
     dotOutput += this.resolveConnections(filteredUnits);
@@ -47,7 +48,13 @@ export default class Bussola {
         const unitsOfGroup = groups[groupName];
         if(Boolean(groupName)) {
           output += `subgraph cluster_${currentDirective}_${groupName} {\n`;
-          output += `href = \"${currentDirective}___${groupName}\";\n`;
+          output += "style=rounded;\n";
+          if (restOfDirectives.length % 2 == 0) {
+            output += 'bgcolor="#fafafa";\n';
+          } else {
+            output += 'bgcolor="#f6f6f6";\n';
+          }
+          //output += `href = \"${currentDirective}___${groupName}\";\n`;
           output += `label = \"${groupName}\";\n`;
           output += this.plotUnits(unitsOfGroup, restOfDirectives);
           output += "}\n";

@@ -1,1 +1,1 @@
-docker run --rm -it -v "$PWD":/app -w /app node:alpine sh
+docker run --rm -it -v "$PWD":/app -w /app node:buster sh
