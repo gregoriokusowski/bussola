@@ -1,3 +1,8 @@
+// make it graphviz friendly
+function sluggize(str) {
+  return str.replace(/-/g,"_").replace(/ /g,"_").toLowerCase();
+}
+
 export default class Bussola {
   constructor(params) {
     this.units = params.units;
@@ -47,7 +52,7 @@ export default class Bussola {
       Object.keys(groups).forEach((groupName) => {
         const unitsOfGroup = groups[groupName];
         if(Boolean(groupName)) {
-          output += `subgraph cluster_${currentDirective}_${groupName} {\n`;
+          output += `subgraph cluster_${sluggize(currentDirective)}_${sluggize(groupName)} {\n`;
           output += "style=rounded;\n";
           if (restOfDirectives.length % 2 == 0) {
             output += 'bgcolor="#fafafa";\n';
@@ -67,7 +72,7 @@ export default class Bussola {
     } else {
       let output = "";
       filteredUnits.forEach((unit) => {
-        output += `${unit.name} [label=\"${unit.name}\"]; \n`;
+        output += `${sluggize(unit.name)} [label=\"${unit.name}\"]; \n`;
       });
       return output;
     }
@@ -77,7 +82,7 @@ export default class Bussola {
     let output = "";
     filteredUnits.forEach((unit) => (unit.dependsOn || []).forEach((dependency) => {
       if (names.indexOf(dependency) !== -1) {
-        output += `${unit.name} -> ${dependency};`
+        output += `${sluggize(unit.name)} -> ${sluggize(dependency)};`
       }
     }));
     return output;
